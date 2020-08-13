@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:posts_app/core/services/service_locator.dart';
+import 'package:posts_app/ui/views/all_posts_screen.dart';
 
 void main() {
+  setupServiceLocator();
   runApp(MyApp());
 }
 
@@ -10,7 +13,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      home: Text('Flutter Demo Home Page'),
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+      ),
+      home: AllPostsScreen(),
     );
   }
 }
