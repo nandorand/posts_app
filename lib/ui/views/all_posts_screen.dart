@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:posts_app/core/business_logic/view_models/all_posts_screen.dart';
 import 'package:posts_app/core/services/service_locator.dart';
+import 'package:posts_app/ui/views/post_detail_screen.dart';
 import 'package:provider/provider.dart';
 
 class AllPostsScreen extends StatefulWidget {
@@ -56,7 +57,13 @@ class _AllPostsScreenState extends State<AllPostsScreen> {
           return Card(
             child: ListTile(
               title: Text(model.posts[index].title),
-              onTap: () {},
+              onTap: () async {
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PostDetailScreen(
+                            postId: model.posts[index].postId)));
+              },
               trailing: IconButton(
                   icon: Icon(Icons.favorite_border), onPressed: () {}),
             ),
