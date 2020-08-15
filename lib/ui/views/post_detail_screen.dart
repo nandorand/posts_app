@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:posts_app/core/business_logic/view_models/post_detail_screen.dart';
 import 'package:posts_app/core/services/service_locator.dart';
 import 'package:provider/provider.dart';
+import 'package:posts_app/core/business_logic/view_models/base_view_model.dart';
 
 class PostDetailScreen extends StatefulWidget {
   final int postId;
@@ -35,17 +36,17 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
           ),
           body: Column(
             children: [
-              model.postState == PostDetailViewState.completed
+              model.postState == ViewState.completed
                   ? buildPostTitle(model)
                   : Align(
                       child: CircularProgressIndicator(),
                     ),
-              model.postState == PostDetailViewState.completed
+              model.postState == ViewState.completed
                   ? buildUserInfo(model)
                   : Align(
                       child: CircularProgressIndicator(),
                     ),
-              model.commentState == PostDetailViewState.completed
+              model.commentState == ViewState.completed
                   ? buildComments(model)
                   : Align(
                       child: CircularProgressIndicator(),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:posts_app/core/business_logic/view_models/all_posts_screen.dart';
 import 'package:posts_app/core/services/service_locator.dart';
+import 'package:posts_app/ui/views/favorites_screen.dart';
 import 'package:posts_app/ui/views/post_detail_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:posts_app/core/business_logic/view_models/base_view_model.dart';
 
 class AllPostsScreen extends StatefulWidget {
   @override
@@ -23,13 +25,26 @@ class _AllPostsScreenState extends State<AllPostsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("built all posts screen");
     return ChangeNotifierProvider<AllPostsScreenViewModel>(
       create: (context) => model,
       child: Consumer<AllPostsScreenViewModel>(
         builder: (context, model, child) => Scaffold(
           appBar: AppBar(
             title: Text("Post App"),
-            actions: [IconButton(icon: Icon(Icons.favorite), onPressed: () {})],
+            actions: [
+              IconButton(
+                icon: Icon(Icons.favorite),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FavoritesScreen(),
+                    ),
+                  );
+                },
+              )
+            ],
           ),
           body: Column(
             children: [
@@ -65,7 +80,12 @@ class _AllPostsScreenState extends State<AllPostsScreen> {
                             postId: model.posts[index].postId)));
               },
               trailing: IconButton(
-                  icon: Icon(Icons.favorite_border), onPressed: () {}),
+                  icon: Icon(model.posts[index].isFavorite
+                      ? Icons.favorite
+                      : Icons.favorite_border),
+                  onPressed: () async {
+                    await model.toggleFavorites(model.posts[index].postId);
+                  }),
             ),
           );
         },

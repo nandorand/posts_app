@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:posts_app/core/services/posts/posts_service.dart';
 import 'package:posts_app/core/services/service_locator.dart';
-import 'package:posts_app/core/services/web/web_api.dart';
+import 'base_view_model.dart';
 
 class PostDetailScreenViewModel extends ChangeNotifier {
   PostDetailPresentation _post = PostDetailPresentation();
   List<CommentPresentation> _comments = [];
-  PostDetailViewState _postState = PostDetailViewState.searching;
-  PostDetailViewState _commentState = PostDetailViewState.searching;
+  ViewState _postState = ViewState.searching;
+  ViewState _commentState = ViewState.searching;
 
-  WebApi _webapi = serviceLocator<WebApi>();
+  PostsService _postsService = serviceLocator<PostsService>();
 
   PostDetailPresentation get post {
     return _post;
@@ -18,45 +19,43 @@ class PostDetailScreenViewModel extends ChangeNotifier {
     return _comments;
   }
 
-  PostDetailViewState get postState {
+  ViewState get postState {
     return _postState;
   }
 
-  PostDetailViewState get commentState {
+  ViewState get commentState {
     return _commentState;
   }
 
   Future<void> loadData(int postId) async {
-    final post = await _webapi.fetchPostById(postId);
+    final post = await _postsService.getPostById(postId);
 
-    _postState = PostDetailViewState.searching;
+    _postState = ViewState.searching;
 
     notifyListeners();
 
     _post = PostDetailPresentation(
         userId: post.userId, postTitle: post.title, postBody: post.body);
 
-    _postState = PostDetailViewState.completed;
+    _postState = ViewState.completed;
 
     notifyListeners();
 
-    _commentState = PostDetailViewState.searching;
+    _commentState = ViewState.searching;
 
     notifyListeners();
 
-    final comments = await _webapi.getCommentsByPostId(postId);
+    final comments = await _postsService.getCommentsByPostId(postId);
     _comments = comments
         .map((comment) => CommentPresentation(
             body: comment.body, email: comment.email, name: comment.name))
         .toList();
 
-    _commentState = PostDetailViewState.completed;
+    _commentState = ViewState.completed;
 
     notifyListeners();
   }
 }
-
-enum PostDetailViewState { searching, completed }
 
 class CommentPresentation {
   final String name;
